@@ -1,0 +1,102 @@
+
+<div class="row">
+  <div class="col-sm-12">
+      <div class="card-body">
+     
+<div class="vertical-nav" id="sidebar" style="background-color: #1C4E57;border-right: solid 2px #1C4E57;">
+  <div class="py-4 px-3 mb-4 bg-light">
+    <div class="media d-flex align-items-center"><img src="assets/img/logo.png" alt="..." width="65"
+        class="mr-3 rounded-circle img-thumbnail shadow-sm">
+      <div class="media-body">
+        <h4 class="m-0">{{name}}</h4>
+        <p class="font-weight-light text-muted mb-0">{{rol}}</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="font-weight-bold text-uppercase px-3 small pb-4 mb-0" style="color: white;">Menu</p>
+
+  <ul class="nav flex-column bg-white mb-0" *ngFor="let lista of menu">
+
+    <li class="nav-item">
+      <a routerLink={{lista.src}} class="nav-link text-dark font-weight-bold bg-light">
+        <i class="fa fa-th-large mr-3 text-primary fa-fw"></i>
+        {{lista.nombre}}
+      </a>
+    </li>
+  </ul>
+  <ul class="nav flex-column bg-white mb-0">
+    <li>
+      <a routerLink="group_notifications" class="nav-link text-dark font-weight-bold bg-light">
+        <i class="fa fa-bar-chart mr-3 text-primary fa-fw"></i>
+        <div class="cj1">
+          <span title="Nueva notificaciones sin leer" *ngIf="quantityNotification>0" class="badge">{{quantityNotification}}</span>
+        </div>Panel de Notificaciones
+      </a>
+    </li>
+  </ul>  
+
+  <ul class="nav flex-column bg-white mb-0">
+    <li>
+      <a (click)="closeSession()" class="nav-link text-dark font-weight-bold bg-light">
+        <i class="fa fa-bar-chart mr-3 text-primary fa-fw"></i>
+        Cerrar Sesion
+      </a>
+    </li>
+  </ul>
+</div>
+      </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<!--LOGICA NOTIFICACIONES-->
+<button type="button" id="btnnoti1" (click)="showNotification(customTpl1,idnoti1)" ></button>
+<button type="button" id="btnnoti2" (click)="showNotification(customTpl2,idnoti2)" ></button>
+<button type="button" id="btnnoti3" (click)="showNotification(customTpl3,idnoti3)" ></button>
+<button type="button" id="btnnoti4" (click)="showNotification(customTpl4,idnoti4)" ></button>
+<button type="button" id="btnnoti5" (click)="showNotification(customTpl5,idnoti5)" ></button>
+<button type="button" id="btnnoti6" (click)="showNotification(customTpldefault)" ></button>
+<ng-template #customTpl1>
+  <i>{{msjnoti1}}</i>
+  <button type="button" (click)="sendNotification(idnoti1)" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</ng-template>
+<ng-template #customTpl2>
+  <i>{{msjnoti2}}</i>
+  <button type="button" (click)="sendNotification(idnoti2)" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</ng-template>
+<ng-template #customTpl3>
+  <i>{{msjnoti3}}</i>
+  <button type="button" (click)="sendNotification(idnoti2)" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</ng-template>
+<ng-template #customTpl4>
+  <i>{{msjnoti4}}</i>
+  <button type="button" (click)="sendNotification(idnoti3)" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</ng-template>
+<ng-template #customTpl5>
+  <i>{{msjnoti5}}</i>
+  <button type="button" (click)="sendNotification(idnoti4)" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</ng-template>
+<ng-template #customTpldefault>
+  <i>{{msjnotidefault}}</i>
+  <button type="button" (click)="sendNotification(idnoti5)" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</ng-template>
+
+<app-toasts></app-toasts>

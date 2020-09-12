@@ -1,0 +1,200 @@
+<!-- <div class="vertical-nav bg-white" id="sidebar">
+    <app-navbar-trainer></app-navbar-trainer>
+    </div> -->
+<div class="col-lg-10 col-md-12 col-12 body_block  align-content">
+  <div>
+    <div class="row ">
+      <div class="col-md-12 col-12 content_section">
+        <div class="content_box">
+          <div class="content_box_inner">
+            <div class="panel panel-primary">
+              <br>
+              <div class="panel-heading">
+                <p style="padding: 10px;font-weight: bold;font-size: 25px;">Actualiza tus datos Personales</p>
+                <hr>
+              </div>
+              <br>
+
+              <div class="panel-body">
+                <form style="margin-top: 50px;" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                  <div class="form-row">
+                <div class="form-group col-md-6">
+                      <label for="validationTooltip01">Usuario</label>
+                      <input type="text" class="form-control" placeholder="Ingrese sus nombres" formControlName="user"
+                        id="user" disabled [ngClass]="{ 'is-invalid': submitted && f.user.errors }">
+                      <div *ngIf="submitted && f.user.errors" class="invalid-feedback">
+                        <div *ngIf="f.user.errors.required">Usuario es requerido</div>
+                      </div>
+                    </div>  
+                    <div class="form-group col-md-6">
+                      <label for="validationTooltip01">Tipo de Usuario</label>
+                      <input type="text" class="form-control" placeholder="Ingrese sus nombres" formControlName="rolid"
+                        id="rolid" disabled [ngClass]="{ 'is-invalid': submitted && f.rolid.errors }">
+                      <div *ngIf="submitted && f.rolid.errors" class="invalid-feedback">
+                        <div *ngIf="f.rolid.errors.required">Tipo de usuario requerido</div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="validationTooltip01">Correo</label>
+                      <input type="text" class="form-control" placeholder="Ingrese sus nombres" formControlName="email"
+                        id="email" disabled [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+                      <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                        <div *ngIf="f.email.errors.required">Correo es requerido</div>
+                      </div>
+                    </div> 
+
+
+
+                    <div class="form-group col-md-6">
+                      <label for="validationTooltip01">Nombres</label>
+                      <input type="text" class="form-control" placeholder="Ingrese sus nombres"
+                        formControlName="firstname" id="firstname"
+                        [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }">
+                      <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
+                        <div *ngIf="f.firstname.errors.required">Nombres es requerido</div>
+                        <div *ngIf="f.firstname.errors.pattern">El nombre debe tener numero, letras o espacio</div>  
+                      </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                      <label for="text">Apellidos</label>
+                      <input type="text" class="form-control" placeholder="Ingrese sus apellidos"
+                        formControlName="lastname" id="lastname"
+                        [ngClass]="{ 'is-invalid': submitted && f.lastname.errors }">
+                      <div *ngIf="submitted && f.lastname.errors" class="invalid-feedback">
+                        <div *ngIf="f.lastname.errors.required">Apellidos es requerido</div>
+                        <div *ngIf="f.lastname.errors.pattern">El apellido debe tener numero, letras o espacio</div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label class="lbl">Sexo*</label>
+                      <select formControlName="sex" 
+                        class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.sex.errors }">
+                        <option value="">Seleccione</option>
+                        <option value="F">Femenino</option>
+                        <option value="M">Masculino</option>
+                      </select>
+                      <div *ngIf="submitted && f.sex.errors" class="invalid-feedback">
+                        <div *ngIf="f.sex.errors.required">Sexo es requerido</div>
+                      </div>            
+                    </div>
+
+                    <div class="form-group col-md-6">
+                      <label for="validationTooltip01">Fecha nacimiento</label>
+                      <input    placeholder="Ingrese su fecha de nacimiento"  
+                      class ="form-control"  formControlName="birthdate" id="birthdate"  [ngClass]="{ 'is-invalid': submitted && f.birthdate.errors }" (change)="ageCalculator()"
+                      bsDatepicker #dp="bsDatepicker" [bsConfig]="bsConfig">
+
+                     
+                      <div *ngIf="submitted && f.birthdate.errors" class="invalid-feedback">
+                        <div *ngIf="f.birthdate.errors.required">Fecha de nacimiento es requerido</div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="text">Celular</label>
+                      <input type="text" type="text" class="form-control" placeholder="Ingrese su celular"
+                        formControlName="phone" id="phone" [ngClass]="{ 'is-invalid': submitted && f.phone.errors }">
+                      <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+                        <div *ngIf="f.phone.errors.required">Celular es requerido</div>
+                        <div *ngIf="f.phone.errors.pattern">Debe ingresar solo numeros</div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="validationTooltip01">Estatura(m)</label>
+                      <input type="text" type="number" class="form-control" placeholder="Ingrese su estatura"
+                        formControlName="weight" id="weight" [ngClass]="{ 'is-invalid': submitted && f.weight.errors }">
+                      <div *ngIf="submitted && f.weight.errors" class="invalid-feedback">
+                        <div *ngIf="f.weight.errors.required">Estatura requerido</div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="text">Peso(kg)</label>
+                      <input type="text" type="number" class="form-control" placeholder="Ingrese su peso"
+                        formControlName="height" id="height" [ngClass]="{ 'is-invalid': submitted && f.height.errors }">
+                      <div *ngIf="submitted && f.height.errors" class="invalid-feedback">
+                        <div *ngIf="f.height.errors.required">Peso es requerido</div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="form-group">
+                        <label>Ingresa tu dirección</label>
+                        <input type="text" class="form-control" (keydown.enter)="$event.preventDefault()" 
+                        formControlName="direction" id="direction" [ngClass]="{ 'is-invalid': submitted && f.direction.errors }"
+                          placeholder="Busca tu direccion" autocorrect="off" autocapitalize="off" spellcheck="off"
+                          type="text" #search>
+                          <div *ngIf="submitted && f.direction.errors" class="invalid-feedback">
+                            <div *ngIf="f.direction.errors.required">Dirección es requerido</div>
+                          </div>
+                      </div>
+
+                      <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom">
+                        <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"
+                          (dragEnd)="markerDragEnd($event)"></agm-marker>
+                      </agm-map>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleFormControlTextarea1">Perfil</label>
+
+                      <textarea type="text" class="form-control" rows="3" cols="200" formControlName="profile"
+                        id="profile" [ngClass]="{ 'is-invalid': submitted && f.profile.errors }"></textarea>
+                      <div *ngIf="submitted && f.profile.errors" class="invalid-feedback">
+                        <div *ngIf="f.profile.errors.required">Perfil es requerido</div>
+                      </div>
+
+                    </div>
+                    <div class="col-md-6">
+                      <button type="button" class="btn btn_app_pri" (click)="onSubmit()">Actualizar datos</button>
+                    </div>
+                    <div class="col-md-6" style="position: relative;">
+                      <button type="button" (click)="openModalChagePassword(modalchangepassword)" class="btn btn_app_pri">Actualizar Contraseña</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="height: 80px;"><br></div>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">  
+  <p style="color: white">Espere un momento por favor. </p>  
+</ngx-spinner> 
+<app-toasts></app-toasts>
+<!--INFO SOLICITUD -->
+<ng-template #modalchangepassword let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Cambiar contraseña</h4>
+    <button type="button" class="close" aria-label="Close" style="margin-left: 10px;display: inline-block;" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div style="margin-top: 20px; ">
+      <label><b>Contraseña actual</b></label>
+    </div>
+    <div>
+      <input type="password" maxlength="16" [(ngModel)]="oldpassword" class="form-control" placeholder="Digite su contraseña actual" id="oldpassword">
+    </div>
+    <div style="margin-top: 20px; ">
+      <label><b>Contraseña nueva</b></label>
+    </div>
+    <div>
+      <input type="password" maxlength="16" [(ngModel)]="newpassword" class="form-control" placeholder="Digite su nueva contraseña" id="newpassword">
+    </div>    
+    <div style="margin-top: 20px; ">
+      <label><b>Confirmar Contraseña</b></label>
+    </div>
+    <div>
+      <input type="password" maxlength="16" [(ngModel)]="confirmanewpassword" class="form-control" placeholder="Digite su nueva contraseña" id="confirmnewpassword">
+    </div>  
+  </div>    
+  <div class="modal-footer">
+    <button type="button" class="btn btn_app_pri" (click)="updatePassword()">Actualizar</button>
+    <button type="button" class="btn btn_app_pri" (click)="modal.close('Save click')">Salir</button>
+  </div>
+</ng-template>

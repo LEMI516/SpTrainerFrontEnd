@@ -1,0 +1,72 @@
+
+ <div class="panel-heading">
+    <p style="padding: 10px;font-weight: bold;font-size: 25px;">MIS GRUPOS
+    </p>
+    <hr>
+  </div>
+<div class="col-lg-12 col-md-9 col-12 body_block  align-content">
+    <div class="card">
+       
+        <div class="card-body">
+            <div class="panel-body">
+                <div *ngIf="quantityGroups==0" class="div_empty">
+                    <img src="assets/img/icon_empty_gray.png" class="icn_empty"><br>
+                    {{messageEmpty}}
+                  </div>                 
+                <table cellpadding="10">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="width: 900px;">
+                                    <div class="divctn"
+                                        *ngFor="let g of listMyGroup | slice: pageSize | slice: 0:itemsPerPage">
+                                        <div class="cj1" [ngStyle]="{'border-left':'solid 15px '+g.colour}">
+                                            <img (click)="cancalInscription(g,modalconfirm)" title="Cancelar Inscripción"
+                                            style="margin-right: 4%;" class="icn" src="assets/img/icon_cancel.png">                                                
+                                            <img (click)="infoGroup(g)" title="Ver informacion del grupo" class="icn" style="margin-right: 4%;"
+                                            src="assets/img/icon_infob.png">
+                                            <dd class="title">{{g.name}}</dd>
+                                            <dd class="txt">Categoria: {{g.category}} </dd>
+                                            <dd class="txt">Fecha Inicio: {{getFormatDate(g.startdate)}}</dd>
+                                            <dd class="txt">Fecha Final: {{getFormatDate(g.enddate)}} </dd>
+                                            <dd class="txt">
+                                                <img title="Activo" *ngIf="g.active=='true' && activeForDate(g.enddate)"
+                                                    class="icn2" src="assets/img/icon_on.png">
+                                                <img title="Inactivo"
+                                                    *ngIf="g.active=='false' || !activeForDate(g.enddate)" class="icn2"
+                                                    src="assets/img/icon_off.png">
+                                            </dd>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-12 text-center">
+                <ngb-pagination [collectionSize]="lenghtListMyGroup" #numPages [pageSize]="itemsPerPage"
+                    [(page)]="currentPage" (pageChange)="onPageChange(currentPage)"></ngb-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+<!--MODAL CONFIRM -->
+<ng-template #modalconfirm let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">¿Esta seguro que desea cancelar la inscripción en {{groupSelected.name}}? No podra volver a inscribirse</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn_app_pri" (click)="actionModalConfirm()">Si</button>
+      <button type="button" class="btn btn_app_pri" (click)="modal.close('Save click')">No</button>
+    </div>
+  </ng-template>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">
+    <p style="color: white">Espere un momento por favor. </p>
+</ngx-spinner>
+<app-toasts></app-toasts>

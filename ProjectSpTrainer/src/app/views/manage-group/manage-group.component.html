@@ -1,0 +1,430 @@
+<div class="panel-heading">
+  <p style="padding: 10px;font-weight: bold;font-size: 25px;">Administrar Grupos
+  </p>
+  <hr>
+</div>
+<div class="col-lg-12 col-md-9 col-12 body_block  align-content">
+  <div>
+    <div class="row justify-content">
+      <div class="col-md-12 col-7 content_section">
+        <div class="content_box">
+          <div class="content_box_inner">
+            <div class="panel panel-primary">
+              <br>
+              <div class="panel-heading">
+                <button [disabled]="!validateaddGroup || !validateSessions" type="button" (click)="openAddGroup()"
+                  class="btn btn_app_pri">
+                  <img width="18%" src="assets/img/icon_addb.png">
+                  Crear grupo
+                </button>
+                <button type="button" style="margin-left: 2%;" (click)="openModalCreateNotificacion(modalcreatenoti)"
+                  class="btn btn_app_pri">
+                  <img style="width: 15%;" src="assets/img/icon_notification_new.png">
+                  Crear Notificación
+                </button>
+              </div>
+              <br>
+              <div class="panel-body" [hidden]="validateListGroup">
+                <div *ngIf="quantityGroups==0" class="div_empty">
+                  <img src="assets/img/icon_empty_gray.png" class="icn_empty"><br>
+                  {{messageEmpty}}
+                </div>
+                <table cellpadding="10">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div style="width: 900px;">
+                          <div class="divctn" *ngFor="let g of listGroup | slice: pageSize | slice: 0:itemsPerPage ">
+                            <div class="cj1" [ngStyle]="{'border-left':'solid 15px '+g.colour}">
+                              <img (click)="openEditGroup(g)" title="Editar grupo" class="icn"
+                                src="assets/img/icon_edit.png">
+                              <img (click)="infoGroup(g)" title="Ver informacion del grupo" class="icn" style="margin-right: 4%;"
+                                src="assets/img/icon_infob.png">
+                              <img (click)="openAdminSesion(g)" title="Administrar Sesiones de Entrenamiento"
+                                style="margin-right: 4%;" class="icn" src="assets/img/icon_sesion.png">
+                              <img *ngIf="g.state=='CRE'" (click)="openModalConfirmPublish(g,modalconfirmpublish)"
+                                title="Publicar" class="icn" style="margin-right: 4%;"
+                                src="assets/img/icon_publist.png">
+
+                              <dd class="title">{{g.name}}</dd>
+                              <dd class="txt">Categoria: {{g.category}} </dd>
+                              <dd class="txt">Fecha Inicio: {{getFormatDate(g.startdate)}}</dd>
+                              <dd class="txt">Fecha Final: {{getFormatDate(g.enddate)}} </dd>
+                              <dd class="txt">
+                                <img title="Activo" *ngIf="g.active=='true' && activeForDate(g.enddate)" class="icn2"
+                                  src="assets/img/icon_on.png">
+                                <img title="Inactivo" *ngIf="g.active=='false' || !activeForDate(g.enddate)"
+                                  class="icn2" src="assets/img/icon_off.png">
+                                <img title="Publicado" *ngIf="g.state=='PUB'" style="margin-left: 2%;" class="icn2"
+                                  src="assets/img/icon_publist.png">
+                              </dd>
+                            </div>
+                          </div>
+
+                        </div>
+                      </td>
+
+                    </tr>
+                  </tbody>
+
+                </table>
+                <div class="col-md-12 text-center">
+                  <ngb-pagination [collectionSize]="sizeListGroup" #numPages [pageSize]="itemsPerPage"
+                    [(page)]="currentPage" (pageChange)="onPageChange(currentPage)"></ngb-pagination>
+                </div>
+              </div>
+              <!-- Crear Editar Grupo -->
+              <div [hidden]="validateaddGroup" style="width: 100%;"            
+                class="col-lg-12 col-md-12 col-12 body_block  align-content">
+                <div class="form-group col-md-6" style="left: 90%;">
+                  <button type="button" class="btn btn_app_pri" (click)="claseAddGroup()">Volver</button>
+                </div>
+                <p *ngIf="modeCreateGroup" style="font-weight: bold;font-size: 25px;">Crear nuevo grupo de entrenamiento
+                </p>
+                <p *ngIf="modeEditGroup" style="font-weight: bold;font-size: 25px;">Editar nuevo grupo de entrenamiento
+                </p>
+                <form style="margin-top: 50px;" [formGroup]="groupcreateForm">
+                  
+                  <div class="form-row" style="margin-top: 20px;">
+                    <div class="form-group col-md-6">
+                      <label>Nombre</label>
+                      <input maxlength="50" type="text" class="form-control" placeholder="Nombre" formControlName="name" id="name"
+                        [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+                      <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                        <div *ngIf="f.name.errors.required">Nombre es requerido</div>
+                        <div *ngIf="f.name.errors.pattern">El nombre debe contener solo letras y numeros</div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label>Cantidad cupos</label>
+                      <input type="text" class="form-control" placeholder="Cupos" formControlName="quantity"
+                        id="quantity" [ngClass]="{ 'is-invalid': submitted && f.quantity.errors }">
+                      <div *ngIf="submitted && f.quantity.errors" class="invalid-feedback">
+                        <div *ngIf="f.quantity.errors.required">Cantidad es requerido</div>
+                        <div *ngIf="f.quantity.errors.pattern">Debe ingresar solo numeros</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label>Color</label>
+                      <input type="color" class="form-control" formControlName="colour" id="colour">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <div class="form-group form-check" style="padding-left: 63px;top: 35px;">
+                        <input type="checkbox" class="form-check-input"
+                          style="height: 20px;width: 40px;position: relative;" formControlName="active" id="active">
+                        <label for="active" class="form-check-label">Activo</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label>Fecha inicial</label>
+                      <input readonly=true class="form-control" formControlName="startdate" id="startdate"
+                        [ngClass]="{ 'is-invalid': submitted && f.startdate.errors }" [(ngModel)]="minEndDate2"
+                        bsDatepicker #dp="bsDatepicker" [bsConfig]="bsConfig" [minDate]="minEndDate">
+                      <div *ngIf="submitted && f.startdate.errors" class="invalid-feedback">
+                        <div *ngIf="f.startdate.errors.required">Fecha inicial es requerido</div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label>Fecha final</label>
+                      <input readonly=true class="form-control" formControlName="enddate" id="enddate" 
+                        [ngClass]="{ 'is-invalid': submitted && f.enddate.errors }" bsDatepicker #dp="bsDatepicker"
+                        [bsConfig]="bsConfig" >
+                      <div *ngIf="submitted && f.enddate.errors" class="invalid-feedback">
+                        <div *ngIf="f.enddate.errors.required">Fecha final es requerido</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="lbl">Categoría</label>
+                    <select formControlName="category" class="form-control"
+                      [ngClass]="{ 'is-invalid': submitted && f.category.errors }">
+                      <option *ngFor="let cat of categorys; let num = index" value="{{cat.value}}">{{cat.name}}</option>
+                    </select>
+                    <div *ngIf="submitted && f.category.errors" class="invalid-feedback">
+                      <div *ngIf="f.category.errors.required">Dia inicial es requerido</div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea class="form-control" rows="3" formControlName="description" id="description"
+                      [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
+                    <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+                      <div *ngIf="f.description.errors.required">Descripcion es requerido</div>
+                    </div>
+                  </div>
+                  <div class="form-row" style="margin-top: 20px;">
+                    <div class="form-group col-md-6">
+                      <button type="button" class="btn btn_app_pri" (click)="onSubmit()"
+                        style="margin-right: 20px;">Guardar</button>
+                    </div>
+                  
+                  </div>
+                </form>
+              </div>
+              <!-- Fin Crear Editar Grupo -->
+              <!-- Administrar Sessiones -->
+              <div [hidden]="validateSessions" style="width: 900px;">
+                <p style="font-weight: bold;font-size: 25px;">Administrar Sesiones de Entrenamiento -
+                  {{groupTrainerSelected.name}} {{((modeCreateSesionGroup)?'( Crear )':'Editar')}}</p>
+                <form style="margin-top: 0px;" [formGroup]="sesionForm">
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label>Nombre</label>
+                      <input type="text" class="form-control" placeholder="Nombre" formControlName="namess" id="namess"
+                        [ngClass]="{ 'is-invalid': submitteds && sf.namess.errors }">
+                      <div *ngIf="submitteds && sf.namess.errors" class="invalid-feedback">
+                        <div *ngIf="sf.namess.errors.required">Nombre es requerido</div>
+                        <div *ngIf="sf.namess.errors.pattern">El nombre debe contener solo letras y numeros</div>
+                      </div>
+                    </div>
+                        <div class="form-group col-md-6">
+                          <label class="lbl">Frecuencia de Entrenamiento</label>
+                          <select  class="form-control" formControlName="frecuenciaTrainer" (change)="validateDay()">
+                            <option value="-1">Seleccione</option>
+                            <option value="oneS">Una vez a la semana</option>
+                            <option value="rangeS">Rango de dia de semana</option>
+                          </select> 
+                        </div>
+                   
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-3">
+                      <label class="lbl">Día inicial</label>
+                      <select formControlName="startday" class="form-control" 
+                        [ngClass]="{ 'is-invalid': submitteds && sf.startday.errors }">
+                        <option value="-1">Seleccione</option>
+                        <option value="LUN">Lunes</option>
+                        <option value="MAR">Martes</option>
+                        <option value="MIE">Miercoles</option>
+                        <option value="JUE">Jueves</option>
+                        <option value="VIE">Viernes</option>
+                        <option value="SAB">Sabado</option>
+                        <option value="DOM">Domingo</option>
+                       
+                      </select>
+                      <div *ngIf="submitteds && sf.startday.errors" class="invalid-feedback">
+                        <div *ngIf="sf.startday.errors.required">Dia inicial es requerido</div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label class="lbl">Día final</label>
+                      <select formControlName="endday" class="form-control"  [(ngModel)]="endday"
+                        [ngClass]="{ 'is-invalid': submitteds && sf.endday.errors }">
+                        <option value="-1">Seleccione</option>
+                        <option value="LUN">Lunes</option>
+                        <option value="MAR">Martes</option>
+                        <option value="MIE">Miercoles</option>
+                        <option value="JUE">Jueves</option>
+                        <option value="VIE">Viernes</option>
+                        <option value="SAB">Sabado</option>
+                        <option value="DOM">Domingo</option>
+                        <!-- <option value="TS">Toda la Semana</option> -->
+                        <!-- <option value="NA">No aplica</option> -->
+                      </select>
+                      <div *ngIf="submitteds && sf.endday.errors" class="invalid-feedback">
+                        <div *ngIf="sf.endday.errors.required">Día final es requerido</div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label>Hora inicial</label>
+                       <input type="time" class="form-control" formControlName="starthour" id="starthour"
+                        [ngClass]="{ 'is-invalid': submitteds && sf.starthour.errors }">
+                      <!-- <timepicker [(ngModel)]="mytime" id="starthour" formControlName="starthour"
+                        [ngClass]="{ 'is-invalid': submitteds && sf.starthour.errors }"></timepicker> -->
+                      <div *ngIf="submitteds && sf.starthour.errors" class="invalid-feedback">
+                        <div *ngIf="sf.starthour.errors.required">Hora inicial es requerido</div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label>Hora final</label>
+                     <input type="time" class="form-control" formControlName="endhour" id="endhour"
+                        [ngClass]="{ 'is-invalid': submitteds && sf.endhour.errors }"> 
+                      <!-- <timepicker [(ngModel)]="mytimeEnd" id="endhour" formControlName="endhour"
+                        [ngClass]="{ 'is-invalid': submitteds && sf.endhour.errors }"  
+                        ></timepicker> -->
+                      <div *ngIf="submitteds && sf.endhour.errors" class="invalid-feedback">
+                        <div *ngIf="sf.endhour.errors.required">Hora final es requerido</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom">
+                        <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"
+                          (dragEnd)="markerDragEnd($event)"></agm-marker>
+                      </agm-map>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <div class="form-group">
+                        <label>Ingresa tu dirección</label>
+                        <input type="text" class="form-control" (keydown.enter)="$event.preventDefault()"
+                          formControlName="directionsesion" id="directionsesion"
+                          [ngClass]="{ 'is-invalid': submitteds && sf.directionsesion.errors }"
+                          placeholder="Busca tu direccion" autocorrect="off" autocapitalize="off" spellcheck="off"
+                          type="text" #search>
+                        <div *ngIf="submitteds && sf.directionsesion.errors" class="invalid-feedback">
+                          <div *ngIf="sf.directionsesion.errors.required">Dirección es requerido</div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea class="form-control" rows="1" formControlName="descriptionsesion"
+                          id="descriptionsesion"
+                          [ngClass]="{ 'is-invalid': submitteds && sf.descriptionsesion.errors }"></textarea>
+                        <div *ngIf="submitteds && sf.descriptionsesion.errors" class="invalid-feedback">
+                          <div *ngIf="sf.descriptionsesion.errors.required">Descripcion es requerido</div>
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input"
+                              style="height: 20px;width: 40px;position: relative;" formControlName="activesesion"
+                              id="activesesion">
+                            <label for="activesesion" class="form-check-label">Activo</label>
+                          </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input"
+                              style="height: 20px;width: 40px;position: relative;" formControlName="sitiedefault"
+                              id="sitiedefault">
+                            <label for="sitiedefault" class="form-check-label">Sitio por defecto</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-row" style="margin-top: 20px;">
+                        <div class="form-group col-md-4">
+                          <button type="button" class="btn btn_app_pri" style="margin-right: 20px;"
+                            (click)="onSubmitSesion()">Guardar</button>
+                        </div>
+                        <div class="form-group col-md-4" style="left: 0;">
+                          <button type="button" class="btn btn_app_pri" (click)="onResetSesion()">Limpiar</button>
+                        </div>
+                        <div class="form-group col-md-4" style="left: 0;">
+                          <button type="button" class="btn btn_app_pri" (click)="closedAdminSesion()">Cerrar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Dia Ini</th>
+                      <th scope="col">Dia Ini</th>
+                      <th scope="col">Hora Ini</th>
+                      <th scope="col">Hora Fin</th>
+                      <th scope="col">Activo</th>
+                      <th scope="col">Sitio def</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let s of listSesion; let num = index">
+                      <td>{{num+1}}</td>
+                      <td>{{s.name}}</td>
+                      <td>{{s.startday}}</td>
+                      <td>{{s.endday}}</td>
+                      <td>{{s.starthour}}</td>
+                      <td>{{s.endhour}}</td>
+                      <td>
+                        <img title="Activo" *ngIf="s.active=='true'" style="width: 30%;" class="icn2"
+                          src="assets/img/icon_on.png">
+                        <img title="Inactivo" *ngIf="s.active=='false'" style="width: 30%;" class="icn2"
+                          src="assets/img/icon_off.png">
+                      </td>
+                      <td>
+                        <img title="Activo" *ngIf="s.sitiedefault=='true'" style="width: 25%;" class="icn2"
+                          src="assets/img/icon_on.png">
+                        <img title="Inactivo" *ngIf="s.sitiedefault=='false'" style="width: 25%;" class="icn2"
+                          src="assets/img/icon_off.png">
+                      </td>
+                      <td>
+                        <img title="Editar" class="icn3" (click)="editSession(s)" style="cursor: pointer;"
+                          src="assets/img/icon_edit.png">
+                        <img title="Eliminar" style="cursor: pointer;"
+                          (click)="openModalConfirmDeleteSession(s,modalconfirmpublish)" style="margin-left: 2%;"
+                          class="icn3" src="assets/img/icon_delete.png">
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+
+              </div>
+              <!-- Fin Administrar Sessiones -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--MODAL CREATE NOTIF -->
+<ng-template #modalcreatenoti let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Crear Notificación</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-row" style="margin-top: 20px;" style="align-items: center;">
+      <table style="width: 90%;">
+        <tr>
+          <td valign="top" width="50%">
+            <label>Grupo(s)</label>
+            <div
+              style="height: 200px;width: 140px;overflow: auto; border: solid 1px gray;border-radius: 3px;padding: 5px;">
+              <table>
+                <tr *ngFor="let g of groupDTONOTI; let num = index">
+                  <td>
+                    <input type="checkbox" class="form-check-input"
+                      style="height: 15px;width: 15px;margin-left: 0px; position: relative;" [(ngModel)]="g.checked"
+                      name="check_group">
+                    {{g.name}}
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+          <td valign="top" width="50%">
+            <label>Mensaje</label>
+            <textarea [(ngModel)]="mensajeNoti" class="form-control" rows="6" style="width: 225;"
+              id="mensajeNoti"></textarea>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn_app_pri" (click)="generateNotification()">Crear</button>
+    <button type="button" class="btn btn_app_pri" (click)="modal.close('Save click')">Salir</button>
+  </div>
+</ng-template>
+<!--MODAL CONFIRM -->
+<ng-template #modalconfirmpublish let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{titleModalConfirm}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn_app_pri" (click)="actionModalConfirm()">Confirmar</button>
+    <button type="button" class="btn btn_app_pri" (click)="modal.close('Save click')">Cancelar</button>
+  </div>
+</ng-template>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">
+  <p style="color: white">Espere un momento por favor. </p>
+</ngx-spinner>
+<app-toasts></app-toasts>

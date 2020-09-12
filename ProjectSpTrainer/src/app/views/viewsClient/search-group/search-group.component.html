@@ -1,0 +1,116 @@
+<div class="panel-heading">
+    <p style="padding: 10px;font-weight: bold;font-size: 25px;">Búsqueda de Grupos
+    </p>
+    <hr>
+  </div>
+<div class="col-lg-12 col-md-12 col-12 body_block  align-content">
+   
+            <div class="col-md-12 col-12 content_section">
+
+                <div class="card-deck">
+                    <div class="card col-md-4 ">
+                        <p style="padding: 10px;font-weight: bold;font-size: 25px;">Filtro de búsqueda</p>
+                        <hr>
+                        <div class="card-body">
+                            <div class="btn-toolbar mb-12" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="input-group">
+                                    <input [(ngModel)]="searchtxt" type="text" class="form-control" placeholder="Buscar"
+                                        aria-label="Input group example" aria-describedby="btnGroupAddon">
+                                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                                        <button type="button" (click)="filterSearchGrup()"  class="btn btn_app_pri">Ir</button>
+                                        <button type="button" (click)="clearSearch()"  class="btn btn_app_pri">Borrar</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Entrenadores</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let u of usersDTO; let num = index">
+                                        <td>
+                                            <input type="checkbox" class="form-check-input"
+                                             style="height: 15px;width: 15px;position: relative;" 
+                                             [(ngModel)]="u.checked"
+                                             (change)="filterSearchGrup()"
+                                             name="check_trainer">
+                                            {{u.firstname}} {{u.lastname}} ({{u.quantitygroup}})
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Categorias</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let c of categoriesDTO; let num = index">
+                                        <td>
+                                            <input type="checkbox" class="form-check-input"
+                                             style="height: 15px;width: 15px;position: relative;" 
+                                             (change)="filterSearchGrup()"
+                                             name="check_categories"
+                                             [(ngModel)]="c.checked">
+                                            {{c.name}} ({{c.quantity}})
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-borderless">
+                            </table>
+                            <table class="table table-borderless">
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card col-md-8">
+                        <p style="padding: 10px;font-weight: bold;font-size: 25px;">Resultados</p>
+                        <hr>
+
+                        <div class="card-body">
+                            <div *ngFor="let g of responseGroupInit.groups | slice: pageSize | slice: 0:itemsPerPage" class="list-group">
+                                <a [ngStyle]="{'border-left':'solid 12px '+g.colour}"  class="list-group-item list-group-item-action ">
+                                  <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1" style="text-transform: uppercase;">{{g.name}}</h5>
+                                    <small>{{getDatePublishGroup(g.date_publish)}}<br>{{showDistanceMsj(g.distance)}} , a {{g.distance}}km</small>
+                                    
+                                  </div>
+                                  <p class="mb-1"><b>Entrenador:</b> {{g.user.firstname}} {{g.user.lastname}}</p>
+                                  <small><b>Categoria:</b> {{g.category}} </small><br>
+                                  <small><b>Cupos disponibles:</b> {{g.quantity-g.quantity_member}} </small><br>
+                                  <small><b>Rating Entrenador</b></small>
+                                  <div>
+                                    <ng-template #t let-fill="fill">
+                                        <span class="star" [class.full]="fill === 100">
+                                          <span class="half" [style.width.%]="fill">★</span>★
+                                        </span>
+                                      </ng-template>
+                                      <ngb-rating [(rate)]="g.calificationuser.score" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>                                      
+                                  </div>
+                                  <hr>
+                                  <div class="d-flex w-100 justify-content-between">
+                                    <img title="Ver detalle" src="assets/img/icon_view.png" style="cursor: pointer;width: 8%;" (click)="viewModal(g)">
+                                    <img *ngIf="g.state_user_consulting=='SOLICITUD_PENDING'" title="Solicitud pendiente" src="assets/img/icon_send.png" style="cursor: pointer;width: 8%;opacity: 0.5;" >
+                                    <img *ngIf="g.state_user_consulting=='SOLICITUD_APROVED' || g.state_user_consulting=='SOLICITUD_REJECTED'" title="Solicitud enviada" src="assets/img/icon_solicitud_send.png" style="cursor: pointer;width: 8%;opacity: 0.5;" >  
+                                </div>
+                                </a>
+                             </div>
+                             <div style="margin-top: 20px;" >
+                                <ngb-pagination [collectionSize]="lenghtGroup" #numPages [pageSize]="itemsPerPage" [(page)]="currentPage"
+                                  (pageChange)="onPageChange(currentPage)"></ngb-pagination>
+                              </div>                              
+                        </div>
+                                               
+                    </div>
+                </div>
+    </div>
+</div>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">
+    <p style="color: white">Espere un momento por favor. </p>
+</ngx-spinner>
+<app-toasts></app-toasts>

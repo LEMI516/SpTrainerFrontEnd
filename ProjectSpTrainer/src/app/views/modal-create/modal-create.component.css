@@ -1,0 +1,18 @@
+agm-map {
+    height: 350px;
+    width: 700px;
+}
+
+.modal-xl .modal-lg {
+    max-width: 70%;
+  }
+
+
+.pac-container{
+    z-index: 9999;
+}
+
+.icn2{
+    width: 10%;
+    opacity: 0.5;
+}

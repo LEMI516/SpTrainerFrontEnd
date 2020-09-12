@@ -1,0 +1,56 @@
+.cj1{
+    text-align: justify;
+    background-color: #2668cc;     
+    width: 280px;
+    height: 180px; 
+    border-radius: 10px; 
+    padding: 15px;
+    background-color: #8893a3;
+    vertical-align: middle;
+    display: inline-block;
+    border-left: #2668cc;
+}
+
+.title{
+    color: black;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.txt{
+    color: black;
+}
+
+.icn{
+    float: right;
+    width: 10%;
+    cursor: pointer;
+}
+
+.icn2{
+    width: 10%;
+    opacity: 0.5;
+}
+
+agm-map {
+    height: 295px;
+    width: 445px;
+    border-radius: 10px;
+    
+}
+
+.divctn{
+    width: auto;
+    display: inline-block;
+    margin: 10px;
+}
+
+
+.pac-container{
+    z-index: 9999;
+}
+
+.icn3{
+    width: 25%;
+    display: inline-block;
+}

@@ -1,0 +1,17 @@
+
+
+.jumbotron{
+ 
+    position:relative;
+    top:100px;
+    left:35%;
+    display:block;
+    margin-bottom:80px;
+    width:500px;
+    height:360px;
+    background:rgb(255, 252, 255);
+    border-radius:5px;
+    overflow:hidden;
+    z-index:1;
+    text-align: center;
+}

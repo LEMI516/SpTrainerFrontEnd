@@ -1,0 +1,57 @@
+<app-navbar-a></app-navbar-a>
+
+<div class="row">
+    <div class="col-md-8 center-block" >
+        <img src="assets/img/LOGO1.PNG" alt="..." class="img-circle center-block">
+    </div>
+
+
+    <div class="col-md-4">
+
+        <div class="container3">
+            <h2>Inicio de Sesión</h2>
+            <form>
+                <input style="display: initial;" placeholder="Ingrese su usuario o correo eletronico" name="email" type="email" class="form-control email" id="exampleInputEmail1"  aria-describedby="emailHelp" [(ngModel)]="email">
+                <div style="height: 10px;"></div>
+                <input  style="display: initial;" type="password" class="pwd" name="password" placeholder="Ingrese su contraseña" [(ngModel)]="password">
+                <a class="link" (click)="modalRecupCont(modalRecp)">Olvido contraseña?</a>
+                <br />
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <button class="  btn btn_app_pri" type="button" (click)="routermenu(2)" style="margin-right: 10px;">
+                            Ingresar
+                        </button>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <button class="register  btn btn_app_pri" type="button" (click)="routermenu(1)">
+                            Registrate
+                        </button>
+                    </div>                    
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</div>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">  
+    <p style="color: white">Espere un momento por favor. </p>  
+</ngx-spinner> 
+<app-toasts></app-toasts>
+
+<ng-template #modalRecp let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title"> Cambio de contraseña:</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row" style="margin-top: 20px;" style="align-items: center;">
+
+    </div>    
+</div>   
+<div class="modal-footer">
+     <button type="button" class="btn btn_app_pri" (click)="modal.close('Save click')">Salir</button>
+</div>
+</ng-template>

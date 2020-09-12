@@ -1,0 +1,49 @@
+agm-map {
+    height: 350px;
+    width: 700px;
+}
+
+.modal-xl .modal-lg {
+    max-width: 70%;
+  }
+
+
+.pac-container{
+    z-index: 9999;
+}
+
+.icn2{
+    width: 10%;
+    opacity: 0.5;
+}
+
+.labelstar {
+    color: grey;
+
+  }
+  
+  .clasificacion {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+  }
+  
+  .labelstar:hover,
+  .labelstar:hover ~ .labelstar {
+    color: orange;
+  }
+
+  .star {
+    position: relative;
+    display: inline-block;
+    font-size: 26px;
+    color: #d3d3d3;
+  }
+  .full {
+    color: orange;
+  }
+  .half {
+    position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    color: orange;
+  }

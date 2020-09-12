@@ -1,0 +1,22 @@
+export class User{
+    id:number;
+    rolid:string;
+    document:string;
+    firstname:string;
+    lastname:string;
+    birthdate:string;
+    phone:string;
+    password:string;
+    user:string;
+    email:string;
+    weight:number;
+    height:number;
+    direction:string;
+    city:string;
+    department:string;
+    profile:string;
+    sex:string;
+    photo:string;
+    coordinate:string;
+    quantitygroup:number;
+}

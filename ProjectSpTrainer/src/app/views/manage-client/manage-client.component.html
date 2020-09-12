@@ -1,0 +1,281 @@
+<div class="panel-heading">
+  <p style="padding: 10px;font-weight: bold;font-size: 25px;">Administrar Clientes
+  </p>
+  <hr>
+</div>
+<div class="col-lg-12 col-md-9 col-12 body_block  align-content">
+
+  <div [hidden]="validatePageGroup" class="card">
+      <div class="card-body">
+
+      <div class="panel-body">
+        <div *ngIf="quantityGroups==0" class="div_empty">
+          <img src="assets/img/icon_empty_gray.png" class="icn_empty"><br>
+          {{messageEmpty}}
+        </div>        
+        <table cellpadding="10">
+          <tbody>
+            <tr>
+              <td>
+                <div style="width: 900px;">
+                  <div class="divctn" *ngFor="let g of listGroup | slice: pageSize | slice: 0:itemsPerPage">
+
+                    <div class="cj1" [ngStyle]="{'border-left':'solid 15px '+g.colour}">
+                      <span title=" Cantidad de solicitudes pendientes por responder " *ngIf="g.quantity_solicitude_pending>0" class="badge">{{g.quantity_solicitude_pending}}</span>
+                      <img (click)="openPageMember(g)" title="Miembros" class="icn" src="assets/img/icon_member.png">
+                      <img (click)="openPageSolicitude(g)"title="Solicitudes de Inscripción" class="icn" style="margin-right: 4%;"
+                        src="assets/img/icon_request.png">
+                      <dd class="title">{{g.name}}</dd>
+                      <dd class="txt">Miembros: {{g.quantity_member}} </dd>
+                      <dd class="txt">Cupos Disponibles : {{g.quantity-g.quantity_member}}/{{g.quantity}} </dd>
+                      <dd class="txt">
+                        <img title="Activo" *ngIf="g.active=='true'" class="icn2" src="assets/img/icon_on.png">
+                        <img title="Inactivo" *ngIf="g.active=='false'" class="icn2" src="assets/img/icon_off.png">
+                      </dd>
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-md-12 text-center">
+        <ngb-pagination [collectionSize]="sizeListGroup" #numPages [pageSize]="itemsPerPage" [(page)]="currentPage"
+          (pageChange)="onPageChange(currentPage)"></ngb-pagination>
+      </div>
+    </div>
+  </div>
+  <!-- Administrar Solicitudes de inscripcion -->
+  <div [hidden]="validatePageSolicitude" style="width: 900px;">
+    <div style="margin-top: 10px;width: 100%;">
+      <p style="font-weight: bold;font-size: 25px;display: inline-block">Solicitudes de Inscripción  {{groupTrainerSelected.name}} </p>
+      <button type="button" class="btn btn_app_pri" style="margin-left: 480px;display: inline-block" (click)="closePageSolicitude()">&lt;&lt; Volver </button>            
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label class="lbl">Tipo de Solicitudes</label>
+        <select (change)="loadRegistrationRequest()" [(ngModel)]="stateSelected" id="stateSelected" class="form-control" >
+          <option value="CREATED">Pendientes</option>
+          <option value="ACCEPT">Aceptadas</option>
+          <option value="REJECTED">Rechazadas</option>
+        </select>
+      </div>      
+    </div>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Nombre Solicitante</th>
+          <th scope="col">Fecha Solicitud</th>
+          <th scope="col">Estado</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="quantityListRegistrationRequest==0" ><td colspan="5" >No se encontraron solicitudes del tipo consultado</td></tr>
+        <tr *ngFor="let r of listRegistrationRequest | slice: pageSizeR | slice: 0:itemsPerPageR" 
+        [ngStyle]="{'background-color':r.color}">
+          <td>{{r.user.firstname}} {{r.user.lastname}}</td>
+          <td>{{r.dateregistration}}</td>
+          <td>{{(r.state=='CREATED')?'Pendiente':((r.state=='ACCEPT')?'Aceptada':'Rechazada')}}</td>
+          <td>
+            <img title="Ver" style="cursor: pointer;margin-left: 2%;" (click)="openModalClient(r,modalinfoclient)" class="icn3" src="assets/img/icon_view.png">                        
+          </td>
+        </tr>
+        
+      </tbody>
+    </table>  
+    <div class="col-md-12 text-center">
+      <ngb-pagination [collectionSize]="sizeListRequest" #numPages [pageSize]="itemsPerPageR" [(page)]="currentPageR"
+        (pageChange)="onPageChange(currentPageR)"></ngb-pagination>
+    </div>  
+  </div> 
+  <!-- Administrar Miembros --> 
+  <div [hidden]="validatePageMember" style="width: 900px;">
+    <div style="margin-top: 10px;width: 100%;">
+      <p style="font-weight: bold;font-size: 25px;display: inline-block">Miembros  {{groupTrainerSelected.name}} </p>
+      <button type="button" class="btn btn_app_pri" style="margin-left: 667px;display: inline-block;" (click)="closePageMember()">&lt;&lt; Volver </button>  
+      
+    </div>
+ 
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label class="lbl">Tipo de Miembros</label>
+        <select (change)="loadMembers()" [(ngModel)]="stateSelectedMember" id="stateSelectedMember" class="form-control" >
+          <option value="ACTIVE">Activos</option>
+          <option value="INACTIVE">Dados de baja</option>
+        </select>
+      </div>      
+    </div>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Nombre</th>
+          <th scope="col">Fecha Ingreso</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Calificacion</th>
+          <th scope="col">Gestion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="quantityListMembers==0" ><td colspan="5" >No se encontraron miembros del tipo consultado</td></tr>
+        <tr *ngFor="let m of listMember; let num = index" >
+          <td>{{m.user.firstname}} {{m.user.lastname}}</td>
+          <td>{{m.date_save}}</td>
+          <td>{{(m.state=='ACTIVE')?'Activo':'Inactivo'}}</td>
+          <td> 
+            <p *ngIf="m.state=='ACTIVE'" class="clasificacion" style="text-align-last: center;">
+                <label title="Modifica la calificación" style="cursor: pointer;" *ngFor="let im of m.imagecalificate" [ngStyle]="{'color': im.color }" (click)="clickCalificate(im.rating,m,num)" for="radio{{im.rating}}_{{num}}">★</label>
+            </p>
+            <label *ngIf="m.state=='INACTIVE'">No puede calificar</label>
+          </td>
+          <td>
+            <img title="Ver" style="cursor: pointer;margin-left: 2%;" (click)="openModalMember(m,modalinfomember)" class="icn3" src="assets/img/icon_view.png">                        
+            <img  *ngIf="m.state=='ACTIVE'" title="Dar de baja" style="cursor: pointer;margin-left: 2%;" (click)="openModalConfirm(m,'¿Esta seguro que desea dar de baja al miembro '+m.user.firstname+' '+m.user.lastname+' ?',1,modalconfirm)" class="icn3" src="assets/img/icon_off.png">
+            <img  *ngIf="m.state=='INACTIVE'" title="Activar" style="cursor: pointer;margin-left: 2%;" (click)="openModalConfirm(m,'¿Esta seguro que desea activar al miembro '+m.user.firstname+' '+m.user.lastname+' ?',2,modalconfirm)" class="icn3" src="assets/img/icon_on.png">
+            <!-- <img *ngIf="m.state=='ACTIVE'" title="Calificar" style="cursor: pointer;margin-left: 2%;" (click)="openModalCalificate(m,modalcalificate)" class="icn3" src="assets/img/icon_star.png">                         -->
+          </td>
+        </tr>
+        
+      </tbody>
+    </table>    
+        
+        
+  </div>
+</div>
+<!--INFO SOLICITUD -->
+<ng-template #modalinfoclient let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Solicitud de Inscripción</h4>
+    <button type="button" class="close" aria-label="Close" style="margin-left: 667px;display: inline-block;" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div style="margin-top: 20px; ">
+      <label><b>Usuario:</b> {{requestSelected.user.firstname}} {{requestSelected.user.lastname}},  <b>Sexo:</b> {{requestSelected.user.sex}}</label>
+    </div>
+    <div>
+      <label><b>Perfil Usuario:</b></label>
+      <p class="mb-1"> {{requestSelected.user.profile}}</p>
+    </div>
+    <div>
+      <label><b>Celular:</b> {{requestSelected.user.phone}}</label>
+    </div> 
+    <div>
+      <label><b>Edad:</b> {{getAge(requestSelected.user.birthdate)}} Años, <b>Peso:</b> {{requestSelected.user.weight}}, <b>Altura:</b> {{requestSelected.user.height}}</label>
+    </div>        
+    <div>
+      <label><b>Se unio a SP-Trainer el:</b> {{setFecha(requestSelected.user.date_save)}}</label>
+    </div>
+    <div>
+      <label><b>Rating en SpTrainer</b></label>
+    </div>     
+    <div>
+      <ng-template #t let-fill="fill">
+          <span class="star" [class.full]="fill === 100">
+            <span class="half" [style.width.%]="fill">★</span>★
+          </span>
+        </ng-template>
+        <ngb-rating [(rate)]="requestSelected.user.calification.scoretotal" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>                                      
+    </div>    
+    <div>
+      <label><b>Comentario:</b></label>
+      <p class="mb-1"> {{requestSelected.comment}}</p>
+    </div>
+    <div *ngIf="requestSelected.state=='CREATED'" class="form-row">
+      <div class="form-group">
+        <label><b>Si rechazas la solicitud ingrese el motivo</b> </label>
+        <textarea [(ngModel)]="answer" class="form-control" rows="3" style="width: 400px;"
+          id="description"></textarea>
+      </div>
+    </div>    
+  </div>   
+  <div class="modal-footer">
+    <button *ngIf="requestSelected.state=='CREATED'" type="button" class="btn btn_app_pri" (click)="responseRequest('ACCEPT')">Aceptar</button>
+    <button *ngIf="requestSelected.state=='CREATED'" type="button" class="btn btn_app_pri" (click)="responseRequest('REJECTED')">Rechazar</button>
+    <button type="button" class="btn btn_app_pri" (click)="modal.close('Save click')">Salir</button>
+  </div>
+</ng-template>
+<!--INFO MEMBER -->
+<ng-template #modalinfomember let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Información de Miembro</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div style="margin-top: 20px; ">
+      <label><b>Usuario:</b> {{memberSelected.user.firstname}} {{memberSelected.user.lastname}},  <b>Sexo:</b> {{memberSelected.user.sex}}</label>
+    </div>
+    <div>
+      <label><b>Perfil Usuario:</b></label>
+      <p class="mb-1"> {{memberSelected.user.profile}}</p>
+    </div>
+    <div>
+      <label><b>Celular:</b> {{memberSelected.user.phone}}</label>
+    </div> 
+    <div>
+      <label><b>Edad:</b> {{getAge(memberSelected.user.birthdate)}} Años, <b>Peso:</b> {{memberSelected.user.weight}}, <b>Altura:</b> {{memberSelected.user.height}}</label>
+    </div> 
+    <div>
+      <label><b>Rating en SpTrainer</b></label>
+    </div>     
+    <div>
+      <ng-template #t let-fill="fill">
+          <span class="star" [class.full]="fill === 100">
+            <span class="half" [style.width.%]="fill">★</span>★
+          </span>
+        </ng-template>
+        <ngb-rating [(rate)]="memberSelected.calification.scoretotal" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>                                      
+    </div>          
+    <div>
+      <label><b>Se unio a Grupo el:</b> {{setFecha(memberSelected.date_save)}}</label>
+    </div>
+ 
+  </div>   
+  <div class="modal-footer">
+    <button type="button" class="btn btn_app_pri" (click)="modal.close('Save click')">Salir</button>
+  </div>
+</ng-template>
+<!--MODAL CONFIRM-->
+<ng-template #modalconfirm let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{titleModalConfirm}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn_app_pri" (click)="actionModalConfirm(1)">Confirmar</button>
+    <button type="button" class="btn btn_app_pri" (click)="modal.close('Save click')">Cancelar</button>
+  </div>
+</ng-template>
+<!--MODAL CALIFICATE-->
+<ng-template #modalcalificate let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Calificar a {{memberSelected.user.firstname}} {{memberSelected.user.lastname}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <!-- <div class="modal-body">
+    <div style="margin-top: 20px; ">
+      <img style="cursor: pointer;" *ngFor="let im of imagesCalificates; let num = index"
+      [src]="im.src" class="icn4"
+      (click)="clickImage(im,num)">
+    </div>
+  </div>    -->
+  
+  <div class="modal-footer">
+    <button type="button" class="btn btn_app_pri" >Calificar</button>
+    <button type="button" class="btn btn_app_pri" (click)="modal.close('Save click')">Salir</button>
+  </div>
+</ng-template>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">
+  <p style="color: white">Espere un momento por favor. </p>
+</ngx-spinner>
+<app-toasts></app-toasts>

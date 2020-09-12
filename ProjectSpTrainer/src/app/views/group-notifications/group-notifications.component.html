@@ -1,0 +1,128 @@
+<div class="panel-heading">
+   <p style="padding: 10px;font-weight: bold;font-size: 25px;">Panel de Notificaciones
+  </p>
+  <hr>
+</div>
+<div class="col-lg-12 col-md-9 col-12 body_block  align-content">
+    <div class="panel panel-primary">
+
+        <div class="panel-body">
+            <div class="row justify-content">
+                <div class="col-md-6 col-7 content_section">
+                    <div class="content_box">
+                        <div class="content_box_inner">
+                            <div class="panel panel-primary">
+
+                                <br>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-md-12 ">
+                                           
+                                              
+                                       
+                                                <input type="search" placeholder="Buscar Notifocación"  (change)="filterN()"  [(ngModel)]= "findC"/>
+               
+                                             
+                                        </div>
+                                    </div>
+                                    <div>
+                                
+                                </div>
+                                        <div class="lessons-list" *ngIf="btnfilter else filter">
+
+                                        </div>
+                                        <table cellpadding="10">
+                                            <div *ngIf="quantityNotifications==0" class="div_empty">
+                                                <img src="assets/img/icon_empty_gray.png" class="icn_empty"><br>
+                                                {{messageEmpty}}
+                                              </div>                                            
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div style="width: 900px;">
+
+                                                            <div role="alert" aria-live="assertive" aria-atomic="true"
+                                                                *ngFor="let n of notificationsList | slice: pageSize | slice: 0:itemsPerPage">
+                                                                <div class="toast-header"
+                                                                    style="border-color:  #1C4E57;">
+                                                                    <img title="Activo" style="width: 2%;" class="icn2"
+                                                                        src="assets/img/notifications_active.png">
+                                                                    <strong
+                                                                        class="mr-auto">{{getTitle(n.type_notification)}}</strong>
+                                                                    <small
+                                                                        class="text-muted">{{getDateNoti(n.datenotificacion)}}</small>
+                                                                    <!--<button type="button" class="ml-2 mb-1 close"
+                                                                    data-dismiss="toast" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>-->
+                                                                </div>
+                                                                <div class="toast-body">
+                                                                    {{n.description}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="col-md-12 text-center">
+                                            <ngb-pagination [collectionSize]="sizeList" #numPages
+                                                [pageSize]="itemsPerPage" [(page)]="currentPage"
+                                                (pageChange)="onPageChange(currentPage)"></ngb-pagination>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <ng-template #filter>
+        <form>
+            <div class="form-row align-items-center">
+                <div class="col-auto my-1">
+                    <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
+
+                    <select class="custom-select mr-sm-2" name="miselect" [(ngModel)]="seleccionados"
+                        (change)="funtionSeltType()">
+                        <option [value]="item" *ngFor="let item of lista">{{item}}</option>
+                    </select>
+                </div>
+                <div class="col-auto my-1">
+                    <div class="custom-control custom-checkbox mr-sm-2">
+                        <div class="lessons-list" *ngIf="sltDate else filterDate">
+
+                        </div>
+                        <div class="lessons-list" *ngIf="sltType else filterType">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto my-1">
+                    <button type="submit" class="btn btn_app_pri">Buscar</button>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+    <ng-template #filterDate>
+        <input type="birthdate" type="date" class="form-control" placeholder="Ingrese su fecha de nacimiento"
+            formControlName="birthdate" id="birthdate" [ngClass]="{ 'is-invalid': submitted && f.birthdate.errors }"
+            (change)="ageCalculator()">
+    </ng-template>
+    <ng-template #filterType>
+        <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
+        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+            <option selected>Seleccione...</option>
+            <option value="Fecha">zumba</option>
+            <option value="Tipo">spring</option>
+            <!-- <option value="3">Three</option> -->
+        </select>
+    </ng-template>
+    <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">
+        <p style="color: white">Espere un momento por favor. </p>
+    </ngx-spinner>
+    <app-toasts></app-toasts>

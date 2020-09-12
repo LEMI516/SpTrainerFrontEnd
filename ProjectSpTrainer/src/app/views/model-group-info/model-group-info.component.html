@@ -1,0 +1,136 @@
+<div class="modal-header" style="background-color: #1C4E57;">
+    <h4 class="modal-title" style="color: white;text-transform: uppercase;" id="modal-basic-title">{{group.name}}</h4>
+    <img title="Salir" style="cursor: pointer;" class="icn" (click)="closeModal('Cross click')"
+      src="assets/img/icon_close.png">
+  </div>
+  <div class="modal-body">
+    <div style="width: 100%;">
+      <ngb-tabset>
+        <ngb-tab title="Datos">
+          <ng-template ngbTabContent>
+            <div style="margin-top: 20px; ">
+              <label><b>Entrenador:</b> {{group.user.firstname}} {{group.user.lastname}}</label>
+            </div>
+            <div>
+              <label><b>Perfil Entrenador:</b></label>
+              <p class="mb-1"> {{group.user.profile}}</p>
+            </div>
+            <div>
+              <label><b>Categoría:</b> {{group.category}}</label>
+            </div>
+            <div>
+              <label><b>Cupos disponibles:</b> {{group.quantity-group.members.length}}</label>
+            </div>
+            <div>
+              <label><b>Fecha de inicio:</b> {{setFormatDate(group.startdate)}}</label>
+            </div>
+            <div>
+              <label><b>Fecha de finalización:</b> {{setFormatDate(group.enddate)}}</label>
+            </div>
+            <div>
+              <label><b>Descripción Grupo:</b></label>
+              <p class="mb-1"> {{group.description}}</p>
+            </div>
+            <div *ngIf="isQualify" >
+                <label><b>Califica al entrenador:</b></label>
+                <p class="clasificacion" style="text-align-last: left;">
+                    <label style="cursor: pointer;" title="Modifica su calificación" *ngFor="let im of group.imagecalificate" [ngStyle]="{'color': im.color }" (click)="clickCalificate(im.rating)" for="radio{{im.rating}}_{{num}}">★</label>
+                </p>
+              </div>
+  
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Sesiones">
+          <ng-template ngbTabContent>
+            <div>
+              <table class="table" style="width: 760px;">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Detalle</th>
+                    <th scope="col">Dirección</th>
+                    <th scope="col">Dia(s)</th>
+                    <th scope="col">Horario</th>
+                    <th scope="col">Activo</th>
+                  </tr>
+                </thead>
+                <tbody *ngIf="group.sessions.length==0">
+                  <tr><td colspan="7">No se encontraron sesiones de entrenamiento</td></tr>
+                </tbody>
+                <tbody *ngIf="group.sessions.length>0">
+                  <tr *ngFor="let s of group.sessions; let num = index">
+                    <td>{{num+1}}</td>
+                    <td>{{s.name}}</td>
+                    <td>{{s.description}}</td>
+                    <td>{{s.address}}</td>
+                    <td>{{s.startday}} - {{s.endday}}</td>
+                    <td>{{s.starthour}} - {{s.endhour}}</td>
+                    <td>
+                      <img title="Activo" *ngIf="s.active=='true'" style="width: 30%;" class="icn2"
+                        src="assets/img/icon_on.png">
+                      <img title="Inactivo" *ngIf="s.active=='false'" style="width: 30%;" class="icn2"
+                        src="assets/img/icon_off.png">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Ubicacion de Sesiones">
+          <ng-template ngbTabContent>
+            <div class="form-group">
+              <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" [fitBounds]="true">
+                <agm-marker *ngFor="let data of ubications" [latitude]="data.lat" [longitude]="data.lng"
+                  [label]="{ color:'#FFFFFF' , fontWeight: 'bold', text: data.label }" [agmFitBounds]="true">
+                  <agm-info-window>
+                    <p>{{ data.label }}</p>
+                  </agm-info-window>
+                </agm-marker>
+              </agm-map>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Miembros">
+          <ng-template ngbTabContent>
+            <div>
+                <table class="table" style="width: 760px;">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Rating en SPTrainer</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="group.members.length==0">
+                    <tr><td>Sin miembros inscritos</td></tr>
+                  </tbody>
+                  <tbody *ngIf="group.members.length>0">
+                    <tr *ngFor="let m of group.members; let num = index">
+                      <td>{{num+1}} </td>
+                      <td>{{m.user.firstname}} {{m.user.lastname}} {{(m.state=='TRAINER')?'(Entrenador)':''}}</td>
+                      <td>
+                        <ng-template #t let-fill="fill">
+                          <span class="star" [class.full]="fill === 100">
+                            <span class="half" [style.width.%]="fill">★</span>★
+                          </span>
+                        </ng-template>
+                        <ngb-rating [(rate)]="m.calification.scoretotal" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>                        
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+    </div>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn_app_pri" (click)="closeModal()">Cerrar</button>
+  </div>
+  <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">
+    <p style="color: white">Espere un momento por favor. </p>
+  </ngx-spinner>
+  <app-toasts></app-toasts>

@@ -1,0 +1,111 @@
+.cj1{
+    text-align: justify;
+    background-color: #2668cc;     
+    width: 280px;
+    height: 180px; 
+    border-radius: 10px; 
+    padding: 15px;
+    background-color: #8893a3;
+    vertical-align: middle;
+    display: inline-block;
+    position: relative;
+    border-left: #2668cc;
+}
+
+.cj1 .badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    padding: 5px 8px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+  }
+
+.title{
+    color: black;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.txt{
+    color: black;
+}
+
+.icn{
+    float: right;
+    width: 10%;
+    cursor: pointer;
+}
+
+.icn2{
+    width: 10%;
+    opacity: 0.5;
+}
+
+agm-map {
+    height: 295px;
+    width: 445px;
+    border-radius: 10px;
+    
+}
+
+.divctn{
+    width: auto;
+    display: inline-block;
+    margin: 10px;
+}
+
+
+.pac-container{
+    z-index: 9999;
+}
+
+.icn3{
+    width: 15%;
+    display: inline-block;
+}
+
+.icn4{
+    width: 15%;
+    display: inline-block;
+}
+
+#form {
+    width: 250px;
+    margin: 0 auto;
+    height: 50px;
+  }
+  
+ 
+  .labelstar {
+    color: grey;
+
+  }
+  
+  .clasificacion {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+  }
+  
+  .labelstar:hover,
+  .labelstar:hover ~ .labelstar {
+    color: orange;
+  }
+
+  .star {
+    position: relative;
+    display: inline-block;
+    font-size: 17px;
+    color: #d3d3d3;
+  }
+  .full {
+    color: orange;
+  }
+  .half {
+    position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    color: orange;
+  }
+  

@@ -1,0 +1,185 @@
+<app-navbar-a></app-navbar-a>
+<div style="text-align: center;width: 100%;padding: 0;margin: 0;">
+<div class="container" >
+    <h2>Registrese y acceda a todos nuestros beneficios</h2>
+    <div style="position: absolute;"><label style="float: left;" >Obligatorios*</label></div>
+    <form style="margin-top: 50px;" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label class="lbl">Nombres*</label>
+            <input type="text" class="form-control" maxlength="50"  placeholder="Ingrese sus nombres" 
+            formControlName="firstname" id="firstname"  [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }" >
+            <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
+              <div *ngIf="f.firstname.errors.required">Nombre es requerido</div>
+              <div *ngIf="f.firstname.errors.pattern">El nombre debe tener numero, letras o espacio</div>              
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label class="lbl">Apellidos*</label>
+            <input type="text" class="form-control" maxlength="50" placeholder="Ingrese sus apellidos"  
+            formControlName="lastname" id="lastname"  [ngClass]="{ 'is-invalid': submitted && f.lastname.errors }">
+            <div *ngIf="submitted && f.lastname.errors" class="invalid-feedback">
+              <div *ngIf="f.lastname.errors.required">Apellidos es requerido</div>
+              <div *ngIf="f.lastname.errors.pattern">El apellido debe tener numero, letras o espacio</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label class="lbl">Fecha de nacimiento*</label>
+            <input readonly=true   placeholder="Ingrese su fecha de nacimiento"  
+           class ="form-control"  formControlName="birthdate" id="birthdate"  [ngClass]="{ 'is-invalid': submitted && f.birthdate.errors }" (change)="ageCalculator()"
+           bsDatepicker #dp="bsDatepicker" [bsConfig]="bsConfig">
+          
+            <div *ngIf="submitted && f.birthdate.errors" class="invalid-feedback">
+              <div *ngIf="f.birthdate.errors.required">Fecha de nacimiento es requerido</div>
+            </div>
+          
+          </div>
+          <div class="form-group col-md-6">
+            <label class="lbl">Celular*</label>
+            <input type="text" maxlength="20" class="form-control" placeholder="Ingrese su celular"  
+            formControlName="phone" id="phone"  [ngClass]="{ 'is-invalid': submitted && f.phone.errors }">
+            <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+              <div *ngIf="f.phone.errors.required">Celular es requerido</div>
+              <div *ngIf="f.phone.errors.pattern">Debe ingresar solo numeros</div>
+            </div>
+          </div>
+        </div> 
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label class="lbl">Usuario*</label>
+            <input type="text" maxlength="50" class="form-control" placeholder="Ingrese su usuario"  
+            formControlName="user" id="user"  [ngClass]="{ 'is-invalid': submitted && f.user.errors }">
+            <div *ngIf="submitted && f.user.errors" class="invalid-feedback">
+              <div *ngIf="f.user.errors.required">Usuario es requerido</div>
+              <div *ngIf="f.user.errors.pattern">Debe ingresar solo numeros o letras</div>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label class="lbl">E-mail*</label>
+            <input type="text" class="form-control" placeholder="Ingresa su e-mail"  
+            formControlName="email" id="email"  [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+              <div *ngIf="f.email.errors.required">Email es requerido</div>
+              <div *ngIf="f.email.errors.email">Email debe ser una direccion valida</div>
+            </div>
+          </div>
+        </div> 
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label class="lbl">Contraseña*</label>
+            <input type="password" class="form-control" maxlength="20" placeholder="Ingrese su contraseña"  
+            formControlName="password" id="password"  [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+              <div *ngIf="f.password.errors.required">Contraseña es requerido</div>
+              <div *ngIf="f.password.errors.pattern">Contraseña debe tener al menos 8 caracteres y maxio 16, letras minusculas, mayusculas y digitos</div>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label class="lbl">Confirmar Contraseña*</label>
+            <input type="password" class="form-control" placeholder="Ingresa su e-mail"  
+            formControlName="confirmpassword" id="confirmpassword"  [ngClass]="{ 'is-invalid': submitted && f.confirmpassword.errors }">
+            <div *ngIf="submitted && f.confirmpassword.errors" class="invalid-feedback">
+              <div *ngIf="f.confirmpassword.errors.required">Confirme su contraseña</div>
+            </div>
+          </div>
+        </div>        
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label class="lbl">Sexo*</label>
+            <select formControlName="sex" 
+              class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.sex.errors }">
+              <option value="">Seleccione</option>
+              <option value="F">Femenino</option>
+              <option value="M">Masculino</option>
+            </select>
+            <div *ngIf="submitted && f.sex.errors" class="invalid-feedback">
+              <div *ngIf="f.sex.errors.required">Sexo es requerido</div>
+            </div>            
+          </div>
+          <div class="form-group col-md-6">
+            <label class="lbl">Tipo de Usuario* </label>
+            <select formControlName="typeuser" 
+              class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.typeuser.errors }">
+              <option value="">Seleccione</option>
+              <option value="client">Cliente</option>
+              <option value="coach">Entrenador</option>
+            </select>
+            <div *ngIf="submitted && f.typeuser.errors" class="invalid-feedback">
+              <div *ngIf="f.typeuser.errors.required">Tipo de usuario es requerido</div>
+            </div>             
+          </div>
+        </div> 
+        <div class="form-row">
+          <div class="form-group form-check">
+            <input type="checkbox" 
+            style="height: 20px;width: 40px;position: relative;" 
+            formControlName="acceptterms" id="acceptterms" class="form-check-input" [ngClass]="{ 'is-invalid': submitted && f.acceptterms.errors }" />
+            <label for="acceptTerms" class="form-check-label"  >Acepta nuestras </label>&nbsp;
+            <label for="acceptTerms" class="form-check-label" style="cursor: pointer;"  (click)="modalTermCond(TermCond)" ><i><u>Condiciones</u></i></label>&nbsp;
+            <label for="acceptTerms" class="form-check-label" style="cursor: pointer;"   ><i><u>y</u></i></label>&nbsp;
+            <label for="acceptTerms" class="form-check-label" style="cursor: pointer;"  (click)="modalTermCond(Cond)" ><i><u>políticas de datos</u></i></label>
+            <div *ngIf="submitted && f.acceptterms.errors" class="invalid-feedback">Debe aceptar los terminos y condiciones</div>
+          </div> 
+        </div>
+        <br>
+        <button class="btn btn_app_frm" style="margin-right: 20px; ">Registrarme</button>
+        <button class="btn btn_app_frm"  type="reset" (click)="onReset()">Cancelar</button>
+      </form>
+      <div style="height: 50px;" ></div>
+</div>
+</div>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">  
+  <p style="color: white">Espere un momento por favor. </p>  
+</ngx-spinner> 
+<app-toasts></app-toasts>
+
+<ng-template #TermCond let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title"> Términos y condiciones:</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-row" style="margin-top: 20px;" style="align-items: center;">
+      <div style ="text-align:justify">
+       
+Los Términos y Condiciones, también denominados como Condiciones Generales de Uso, son un documento diseñado para aquellas personas que van a crear o administrar una página o sitio web, en el cual se establecen las condiciones bajo las cuales los usuarios ingresarán y harán uso del sitio web.
+
+El documento se encuentra diseñado para sitios que sean operados o manejados por personas o empresas que tengan su domicilio en la República Mexicana o que estén destinados a personas que habitan en este país, no obstante, su contenido hace referencia a disposiciones civiles comunes en la mayoría de los países del mundo.
+
+Este documento es utilizado para regular las condiciones y reglas a las que se someten tanto los usuarios de un sitio web como su propietario y/o administrador, en lo referente al acceso y utilización del sitio web. De igual manera, hace referencia a las políticas de privacidad, protección de datos personales, enlaces, etc., que se tomarán para proteger la privacidad de los usuarios.
+
+Dichas reglas y principios aportan un mayor nivel de confianza y seguridad jurídica a los usuarios del sitio web así como a sus propietarios y/o administradores, puesto que también se establece el tipo de personas a las que va dirigido y las responsabilidades que estos adquieren al hacer uso del sitio o de los servicios que en él son ofrecidos.
+
+Existe además otro documento conocido generalmente como "Condiciones Generales de Venta" que se utiliza para regular la adquisición de productos o servicios a través de internet, no obstante, este último no debe ser confundido con el presente documento, puesto que el presente solo se limita a regular el acceso, funcionamiento e interacción del usuario con el sitio web, sin que se incluya las condiciones bajo las cuales se formalizará la adquisición de productos o servicios que tengan un costo o que requieran una licencia; y que se puedan obtener o adquirir a través del mismo sitio web.
+      </div>
+    </div>    
+  </div>   
+  <div class="modal-footer">
+       <button type="button" class="btn btn_app_pri" (click)="modal.close('Save click')">Salir</button>
+  </div>
+</ng-template>
+
+<ng-template #Cond let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title"> Politica de Datos</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-row" style="margin-top: 20px;" style="align-items: center;">
+      <div style ="text-align:justify">
+        Autorizo a SP-Trainer, para que, de manera libre, expresa, voluntaria, y debidamente informada, le puedan dar tratamiento a los datos que he suministrado en este formulario. 
+     </div>
+    </div>    
+  </div>   
+  <div class="modal-footer">
+       <button type="button" class="btn btn_app_pri" (click)="modal.close('Save click')">Salir</button>
+  </div>
+</ng-template>
